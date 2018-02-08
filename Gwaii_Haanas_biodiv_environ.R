@@ -72,8 +72,8 @@ table(gh_biodiv_obis$phylum)
 
 # Occurrence by year
 gh_biodiv_obis$year <- as.numeric(format(as.Date(gh_biodiv_obis$eventDate), "%Y"))
-table(gh_biodiv_obis$year)
-
+year_table <- table(gh_biodiv_obis$year)
+plot(year_table)
 
 ###### phylum by year ######
 ggplot() +
