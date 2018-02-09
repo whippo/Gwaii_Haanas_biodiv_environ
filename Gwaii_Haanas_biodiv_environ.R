@@ -2,10 +2,10 @@
 #                                                                                ##
 # Exploring relationships between marine biodiversity and environment            ##
 # in Gwaii Haanas                                                                ##
-# Data are current as of 2018-01-11                                              ##
+# Data are current as of 2018-02-08                                              ##
 # Data source: OBIS | Bio-Oracle | WorldClim                                     ##
 # R code prepared by Ross Whippo                                                 ##
-# Last updated 2018-01-11                                                        ##
+# Last updated 2018-02-08                                                        ##
 #                                                                                ##
 ###################################################################################
 
@@ -16,7 +16,7 @@
 # and abiotic conditions around Gwaii Haanas in British Columbia.
 
 # Required Files (check that script is loading latest version):
-# none.
+# H_kamtschatkana_OBIS.csv # file was added manually to directory
 
 # Associated Scripts:
 # none.
@@ -94,6 +94,43 @@ r <- lapply(paste0("~/Dropbox (Personal)/Global Databases/BioOracle Data/", file
 e <- extent(-133.873804, -129.881252, 51.585705, 54.470169)
 r2 <- lapply(r, function(rast) crop(rast, e))
 
+###################################################################################
+# HALIOTIS DATA                                                                   #
+###################################################################################
+
+abalone <- gh_biodiv_obis %>%
+  filter(genus == "Haliotis")
+
+# Make quick map of all occurrences in dataset
+leafletmap(abalone, popup = "eventDate")
+
+###################################################################################
+# URCHIN DATA                                                                     #
+###################################################################################
+
+urchins <- gh_biodiv_obis %>%
+  filter(family == "Strongylocentrotidae")
+
+###################################################################################
+# KELP DATA                                                                       #
+###################################################################################
+
+kelp <- gh_biodiv_obis %>%
+  filter(order == "Laminariales")
+
+###################################################################################
+# JOINED DATA                                                                     #
+###################################################################################
+
+joined <- bind_rows(kelp, urchins)
+joined <- bind_rows(joined, abalone)
+
+leafletmap(joined, popup = "eventDate")
+
+###### species by year ######
+ggplot() +
+  geom_histogram(data = joined, aes(x = year, fill = family), binwidth = 5) +
+  scale_fill_viridis(discrete = TRUE)
 
 ###################################################################################
 # SUMMARY STATS                                                                   #
